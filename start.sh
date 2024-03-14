@@ -7,9 +7,15 @@ check_package() {
 
 # Function to prompt user for input
 prompt_user() {
-    read -p "$1" input_var
-    echo "$input_var"
+    read -p "$1" input_value
+    echo "$input_value"
 }
+
+# Prompt for domain or IP
+domain=$(prompt_user "Enter your domain or IP address: ")
+
+# Prompt for project name
+project_name=$(prompt_user "Enter your project name: ")
 
 # Update package lists
 sudo apt-get update
@@ -54,26 +60,35 @@ rm -r javafx-jmods-21
 sudo update-alternatives --config java
 sudo update-alternatives --config javac
 
-# Create launcher user
+# Add a new user for running Gravit Launcher
 sudo useradd -m -s /bin/bash launcher
 
-# Switch to launcher user
-su - launcher
+# Switch to the launcher user
+su - launcher << EOF
+# Function to install Gravit Launcher
+install_gravit_launcher() {
+    # Download and run Gravit Launcher setup script
+    wget -O - https://mirror.gravitlauncher.com/scripts/setup-master.sh | bash <(cat) </dev/tty
+}
 
-# Prompt for domain or IP
-domain_or_ip=$(prompt_user "Enter your domain or IP address: ")
+# Install Gravit Launcher
+install_gravit_launcher
 
-# Prompt for project name
-project_name=$(prompt_user "Enter your project name: ")
+# Check if the build failed
+if [ -d "src" ]; then
+    # Remove src directory
+    rm -r src
 
-# Execute setup script for launcher
-wget -O - https://mirror.gravitlauncher.com/scripts/setup-master.sh | bash <(cat) </dev/tty
+    # Reinstall Gravit Launcher
+    install_gravit_launcher
+fi
 
-# After setup is complete, prompt to start
-read -p "Press Enter to start the launcher server..."
-
-# Start launcher server
-./start.sh
+# Start the launcher
+./start.sh <<EOL
+$domain
+$project_name
+EOL
 
 # Provide feedback that installation is complete
-echo "Launcher setup complete."
+echo "JavaFX 21 and Temurin JDK 21 have been installed successfully. Gravit Launcher setup completed."
+EOF
