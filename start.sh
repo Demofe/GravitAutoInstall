@@ -17,6 +17,9 @@ domain=$(prompt_user "Enter your domain or IP address: ")
 # Prompt for project name
 project_name=$(prompt_user "Enter your project name: ")
 
+# Prompt for project mail
+mail=$(prompt_user "Enter your project mail: ")
+
 # Update package lists
 sudo apt-get update
 
@@ -101,9 +104,12 @@ EOF
 #install Nginx
 sudo apt install -y certbot
 sudo apt install -y python3-certbot-nginx
-certbot certonly --nginx -d $domain
-echo "c"
-certbot -d $domain --manual --preferred-challenges dns certonly
+certbot certonly --nginx -d $domain <<EOL
+$mail
+EOL
+certbot -d $domain --manual --preferred-challenges dns certonly <<EOL
+$mail
+EOL
 systemctl stop nginx
 certbot renew
 systemctl start nginx
