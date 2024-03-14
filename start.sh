@@ -108,10 +108,10 @@ certbot certonly --nginx -d $domain <<EOL
 $mail
 a
 c
-1
 EOL
 certbot -d $domain --manual --preferred-challenges dns certonly <<EOL
 $mail
+1
 EOL
 systemctl stop nginx
 certbot renew
