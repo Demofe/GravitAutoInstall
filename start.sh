@@ -69,10 +69,6 @@ su - launcher << EOF
 install_gravit_launcher() {
     # Download and run Gravit Launcher setup script
     wget -O - https://mirror.gravitlauncher.com/scripts/setup-master.sh | bash <(cat) </dev/tty
-
-    # Press Ctrl+C after successful setup
-    exit
-    pkill -INT bash
 }
 
 # Install Gravit Launcher
@@ -85,6 +81,10 @@ if [ -d "src" ]; then
 
     # Reinstall Gravit Launcher
     install_gravit_launcher
+else
+    # Press Ctrl+C after successful setup
+    exit
+    pkill -INT bash
 fi
 EOF
 
