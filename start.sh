@@ -36,12 +36,12 @@ echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.n
 sudo apt-get update
 
 # Install Temurin JDK 21
-sudo apt-get install temurin-21-jdk
+sudo apt-get install temurin-21-jdk -y
 
 # Check if libfreetype-dev is installed
 if ! check_package libfreetype-dev; then
     # If not installed, install libfreetype-dev
-    sudo apt-get install libfreetype-dev
+    sudo apt-get install libfreetype-dev -y
 fi
 
 # Download JavaFX 21
@@ -94,8 +94,19 @@ su - launcher << EOF
 $domain
 $project_name
 stop
+exit
 EOL
+EOF
+
+#install Nginx
+sudo apt install -y certbot
+sudo apt install -y python3-certbot-nginx
+certbot certonly --nginx -d $domain
+echo "c"
+certbot -d $domain --manual --preferred-challenges dns certonly
+systemctl stop nginx
+certbot renew
+systemctl start nginx
 
 # Provide feedback that installation is complete
 echo "JavaFX 21 and Temurin JDK 21 have been installed successfully. Gravit Launcher setup completed."
-EOF
