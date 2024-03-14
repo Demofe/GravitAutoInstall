@@ -73,7 +73,6 @@ install_gravit_launcher() {
     # Press Ctrl+C after successful setup
     exit
     pkill -INT bash
-    su - launcher
 }
 
 # Install Gravit Launcher
@@ -87,7 +86,9 @@ if [ -d "src" ]; then
     # Reinstall Gravit Launcher
     install_gravit_launcher
 fi
+EOF
 
+su - launcher << EOF
 # Start the launcher
 ./start.sh <<EOL
 $domain
