@@ -71,7 +71,9 @@ install_gravit_launcher() {
     wget -O - https://mirror.gravitlauncher.com/scripts/setup-master.sh | bash <(cat) </dev/tty
 
     # Press Ctrl+C after successful setup
+    exit
     pkill -INT bash
+    su - launcher
 }
 
 # Install Gravit Launcher
@@ -90,6 +92,7 @@ fi
 ./start.sh <<EOL
 $domain
 $project_name
+stop
 EOL
 
 # Provide feedback that installation is complete
