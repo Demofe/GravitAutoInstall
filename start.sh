@@ -97,8 +97,9 @@ su - launcher << EOF
 $domain
 $project_name
 stop
-exit
 EOL
+./update.sh
+exit
 EOF
 
 #install Nginx
@@ -116,6 +117,14 @@ EOL
 systemctl stop nginx
 certbot renew
 systemctl start nginx
+
+# install screen
+sudo apt install screen
+
+# Start server
+su - launcher << EOF
+screen -S GravitL "./start.sh"
+EOF
 
 # Provide feedback that installation is complete
 echo "JavaFX 21 and Temurin JDK 21 have been installed successfully. Gravit Launcher setup completed."
