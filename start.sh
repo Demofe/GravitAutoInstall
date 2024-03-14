@@ -106,6 +106,8 @@ sudo apt install -y certbot
 sudo apt install -y python3-certbot-nginx
 certbot certonly --nginx -d $domain <<EOL
 $mail
+a
+c
 EOL
 certbot -d $domain --manual --preferred-challenges dns certonly <<EOL
 $mail
